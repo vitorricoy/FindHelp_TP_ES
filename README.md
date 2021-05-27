@@ -3,7 +3,7 @@
 
 ## Grupo:
 * Gustavo Couto Alves - 2019430007
-* Vitor Assunção Oliveira Rabello - 2019007104
+* Vitor Assunção Rabello de Oliveira - 2019007104
 * Vitor Rodarte Ricoy - 2019007112
 
 ## Objetivo:
