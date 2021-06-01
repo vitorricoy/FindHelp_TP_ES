@@ -30,6 +30,14 @@ Sistema para colocar em contato pacientes e psicólogos de forma online.
 * Como paciente, quero marcar uma consulta presencial com um psicólogo.
 * Como usuário, quero ter acesso a um chat de vídeo entre psicólogo e paciente.
 
+## Diagrama de Arquitetura
+![Diagrama de Arquitetura](https://drive.google.com/uc?export=view&id=1fR2LOe9VXjB_mxPqrh5OxZc4HVCtPn8Z)
+
+## Decisões de Projeto
+* Após logar o usuário irá para a página do chat.
+* Na página do chat, existe um botão para os pacientes buscarem psicólogos para iniciarem uma nova conversa.
+* O usuário é deslogado ao fechar a página e as sessões não são mantidas.
+
 ## Backlog da Sprint
 * História: Como usuário, quero me cadastar no sistema.
     * Tarefa 1: Projetar a interface da página web (Gustavo Couto)
