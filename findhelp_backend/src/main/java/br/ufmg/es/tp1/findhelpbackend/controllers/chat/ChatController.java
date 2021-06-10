@@ -1,6 +1,7 @@
 package br.ufmg.es.tp1.findhelpbackend.controllers.chat;
 
 import br.ufmg.es.tp1.findhelpbackend.models.Mensagem;
+import br.ufmg.es.tp1.findhelpbackend.models.Usuario;
 import br.ufmg.es.tp1.findhelpbackend.services.chat.IChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,5 +32,11 @@ public class ChatController {
     UUID salvarMensagemConversa(UUID idUsuario, UUID idContato, String conteudo) {
         return chatService.salvarMensagemConversa(idUsuario, idContato, conteudo);
     }
+
+    @GetMapping(value = "/historico")
+    List<Usuario> buscarHistoricoConversas(UUID idUsuario) {
+        return chatService.buscarHistoricoConversas(idUsuario);
+    }
+
 
 }

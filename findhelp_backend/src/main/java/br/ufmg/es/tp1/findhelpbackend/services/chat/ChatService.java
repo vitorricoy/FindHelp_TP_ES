@@ -2,6 +2,7 @@ package br.ufmg.es.tp1.findhelpbackend.services.chat;
 
 import br.ufmg.es.tp1.findhelpbackend.exceptions.ParametroInvalidoException;
 import br.ufmg.es.tp1.findhelpbackend.models.Mensagem;
+import br.ufmg.es.tp1.findhelpbackend.models.Usuario;
 import br.ufmg.es.tp1.findhelpbackend.repositories.chat.IChatRepository;
 import org.springframework.stereotype.Service;
 
@@ -35,5 +36,13 @@ public class ChatService implements IChatService {
         todasMensagens.addAll(recebidasPeloUsuario);
         todasMensagens.sort(Comparator.comparing(Mensagem::getHorarioEnvio));
         return todasMensagens;
+    }
+
+    @Override
+    public List<Usuario> buscarHistoricoConversas(UUID idUsuario) {
+        if(idUsuario == null) {
+            throw new ParametroInvalidoException();
+        }
+        return null;
     }
 }
