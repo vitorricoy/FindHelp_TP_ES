@@ -1,0 +1,21 @@
+.conversation {
+    border-bottom: solid 1px #d1dbe4;
+}
+
+.chat-container {
+    height: auto !important;
+}
+
+.chat {
+    height: 90vh !important;
+}
+
+.botoes {
+    display:flex;
+    justify-content: space-between;
+    margin: 0px 10px 10px 10px;
+}
+
+.pagina {
+    margin: 10px;
+}
