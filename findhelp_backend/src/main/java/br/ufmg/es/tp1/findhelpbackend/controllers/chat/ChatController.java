@@ -29,8 +29,8 @@ public class ChatController {
     }
 
     @PostMapping
-    UUID salvarMensagemConversa(UUID idUsuario, UUID idContato, String conteudo) {
-        return chatService.salvarMensagemConversa(idUsuario, idContato, conteudo);
+    UUID salvarMensagemConversa(UUID idRemetente, UUID idDestinatario, String conteudo) {
+        return chatService.salvarMensagemConversa(idRemetente, idDestinatario, conteudo);
     }
 
     @GetMapping(value = "/historico")

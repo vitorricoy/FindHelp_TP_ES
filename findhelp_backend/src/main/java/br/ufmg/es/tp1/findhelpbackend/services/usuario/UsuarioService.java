@@ -1,5 +1,6 @@
 package br.ufmg.es.tp1.findhelpbackend.services.usuario;
 
+import br.ufmg.es.tp1.findhelpbackend.exceptions.NaoEncontradoException;
 import br.ufmg.es.tp1.findhelpbackend.exceptions.ParametroInvalidoException;
 import br.ufmg.es.tp1.findhelpbackend.models.Usuario;
 import br.ufmg.es.tp1.findhelpbackend.repositories.usuario.IUsuarioRepository;
@@ -24,5 +25,12 @@ public class UsuarioService implements IUsuarioService {
         Usuario novoUsuario = new Usuario(UUID.randomUUID(), nome, nomeUsuario, senha, psicologo);
         usuarioRepository.save(novoUsuario);
         return novoUsuario.getId();
+    }
+
+    public Usuario buscarUsuario(UUID idUsuario) {
+        if(idUsuario == null) {
+            throw new ParametroInvalidoException();
+        }
+        return usuarioRepository.findById(idUsuario).orElseThrow(NaoEncontradoException::new);
     }
 }

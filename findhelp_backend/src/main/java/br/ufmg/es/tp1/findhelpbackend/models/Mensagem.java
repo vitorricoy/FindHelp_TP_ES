@@ -1,7 +1,5 @@
 package br.ufmg.es.tp1.findhelpbackend.models;
 
-import org.hibernate.annotations.ManyToAny;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -20,19 +18,19 @@ public class Mensagem {
     private Usuario remetente;
 
     @ManyToOne
-    @JoinColumn(name = "recipiente")
+    @JoinColumn(name = "destinatario")
 
-    private Usuario recipiente;
+    private Usuario destinatario;
 
     private LocalDateTime horarioEnvio;
 
     public Mensagem() { }
 
-    public Mensagem(UUID id, String conteudo, Usuario remetente, Usuario recipiente, LocalDateTime horarioEnvio) {
+    public Mensagem(UUID id, String conteudo, Usuario remetente, Usuario destinatario, LocalDateTime horarioEnvio) {
         this.id = id;
         this.conteudo = conteudo;
         this.remetente = remetente;
-        this.recipiente = recipiente;
+        this.destinatario = destinatario;
         this.horarioEnvio = horarioEnvio;
     }
 
@@ -60,12 +58,12 @@ public class Mensagem {
         this.remetente = remetente;
     }
 
-    public Usuario getRecipiente() {
-        return recipiente;
+    public Usuario getDestinatario() {
+        return destinatario;
     }
 
-    public void setRecipiente(Usuario recipiente) {
-        this.recipiente = recipiente;
+    public void setDestinatario(Usuario recipiente) {
+        this.destinatario = recipiente;
     }
 
     public LocalDateTime getHorarioEnvio() {

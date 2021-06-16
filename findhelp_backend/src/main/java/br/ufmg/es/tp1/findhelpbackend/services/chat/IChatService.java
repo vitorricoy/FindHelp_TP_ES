@@ -9,6 +9,6 @@ import java.util.UUID;
 public interface IChatService {
 
     UUID salvarMensagemConversa(UUID idRecipiente, UUID idRemetente, String conteudo);
-    List<Mensagem> buscarMensagensConversa(UUID idRecipiente, UUID idRemetente);
+    List<Mensagem> buscarMensagensConversa(UUID idRemetente, UUID idDestinatario);
     List<Usuario> buscarHistoricoConversas(UUID idUsuario);
 }
