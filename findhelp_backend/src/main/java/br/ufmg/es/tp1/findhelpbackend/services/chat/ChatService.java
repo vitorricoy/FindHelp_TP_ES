@@ -23,15 +23,27 @@ public class ChatService implements IChatService {
         this.usuarioService = usuarioService;
     }
 
+    private Mensagem construirMensagem(String conteudo, Usuario remetente, Usuario destinatario) {
+        return new Mensagem(UUID.randomUUID(), conteudo, remetente, destinatario, LocalDateTime.now());
+    }
+
+
     public UUID salvarMensagemConversa(UUID idRemetente, UUID idDestinatario, String conteudo) {
         if(idRemetente == null || idDestinatario == null || conteudo == null) {
             throw new ParametroInvalidoException();
         }
         Usuario remetente = usuarioService.buscarUsuario(idRemetente);
         Usuario destinatario = usuarioService.buscarUsuario(idDestinatario);
-        Mensagem novaMensagem = new Mensagem(UUID.randomUUID(), conteudo, remetente, destinatario, LocalDateTime.now());
+        Mensagem novaMensagem = construirMensagem(conteudo, remetente, destinatario);
         chatRepository.save(novaMensagem);
         return novaMensagem.getId();
+    }
+
+    private List<Mensagem> combinarOrdenarMensagens(List<Mensagem> lista1, List<Mensagem> lista2) {
+        return Stream.of(lista1, lista2)
+                     .flatMap(Collection::stream)
+                     .sorted(Comparator.comparing(Mensagem::getHorarioEnvio))
+                     .collect(Collectors.toList());
     }
 
     public List<Mensagem> buscarMensagensConversa(UUID idUsuario, UUID idContato) {
@@ -40,10 +52,23 @@ public class ChatService implements IChatService {
         }
         List<Mensagem> enviadasPeloUsuario = chatRepository.findByDestinatarioAndRemetente(idContato, idUsuario);
         List<Mensagem> recebidasPeloUsuario = chatRepository.findByDestinatarioAndRemetente(idUsuario, idContato);
-        List<Mensagem> todasMensagens = enviadasPeloUsuario;
-        todasMensagens.addAll(recebidasPeloUsuario);
-        todasMensagens.sort(Comparator.comparing(Mensagem::getHorarioEnvio));
+        List<Mensagem> todasMensagens = combinarOrdenarMensagens(enviadasPeloUsuario, recebidasPeloUsuario);
         return todasMensagens;
+    }
+
+    private List<Usuario> extrairUsuariosConversa(List<Mensagem> enviadas, List<Mensagem> recebidas) {
+        List<Usuario> usuarios = new ArrayList<>();
+        for(Mensagem mensagem : enviadas) {
+            usuarios.add(mensagem.getDestinatario());
+        }
+        for(Mensagem mensagem : recebidas) {
+            usuarios.add(mensagem.getRemetente());
+        }
+        return usuarios;
+    }
+
+    private List<Usuario> filtrarUsuariosDistintos(List<Usuario> usuarios) {
+        return usuarios.stream().distinct().collect(Collectors.toList());
     }
 
     @Override
@@ -53,14 +78,8 @@ public class ChatService implements IChatService {
         }
         List<Mensagem> mensagensEnviadas = chatRepository.findByRemetente(idUsuario);
         List<Mensagem> mensagensRecebidas = chatRepository.findByDestinatario(idUsuario);
-        List<Usuario> usuarios = new ArrayList<>();
-        for(Mensagem mensagem : mensagensEnviadas) {
-            usuarios.add(mensagem.getDestinatario());
-        }
-        for(Mensagem mensagem : mensagensRecebidas) {
-            usuarios.add(mensagem.getRemetente());
-        }
-        usuarios = usuarios.stream().distinct().collect(Collectors.toList());
+        List<Usuario> usuarios = extrairUsuariosConversa(mensagensEnviadas, mensagensRecebidas);
+        usuarios = filtrarUsuariosDistintos(usuarios);
         return usuarios;
     }
 }
