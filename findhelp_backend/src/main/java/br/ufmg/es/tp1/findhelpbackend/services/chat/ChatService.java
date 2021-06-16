@@ -8,9 +8,9 @@ import br.ufmg.es.tp1.findhelpbackend.services.usuario.IUsuarioService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ChatService implements IChatService {
@@ -38,8 +38,8 @@ public class ChatService implements IChatService {
         if(idContato == null || idUsuario == null) {
             throw new ParametroInvalidoException();
         }
-        List<Mensagem> enviadasPeloUsuario = chatRepository.findByRecipenteAndRemetente(idContato, idUsuario);
-        List<Mensagem> recebidasPeloUsuario = chatRepository.findByRecipenteAndRemetente(idUsuario, idContato);
+        List<Mensagem> enviadasPeloUsuario = chatRepository.findByDestinatarioAndRemetente(idContato, idUsuario);
+        List<Mensagem> recebidasPeloUsuario = chatRepository.findByDestinatarioAndRemetente(idUsuario, idContato);
         List<Mensagem> todasMensagens = enviadasPeloUsuario;
         todasMensagens.addAll(recebidasPeloUsuario);
         todasMensagens.sort(Comparator.comparing(Mensagem::getHorarioEnvio));
@@ -51,6 +51,16 @@ public class ChatService implements IChatService {
         if(idUsuario == null) {
             throw new ParametroInvalidoException();
         }
-        return null;
+        List<Mensagem> mensagensEnviadas = chatRepository.findByRemetente(idUsuario);
+        List<Mensagem> mensagensRecebidas = chatRepository.findByDestinatario(idUsuario);
+        List<Usuario> usuarios = new ArrayList<>();
+        for(Mensagem mensagem : mensagensEnviadas) {
+            usuarios.add(mensagem.getDestinatario());
+        }
+        for(Mensagem mensagem : mensagensRecebidas) {
+            usuarios.add(mensagem.getRemetente());
+        }
+        usuarios = usuarios.stream().distinct().collect(Collectors.toList());
+        return usuarios;
     }
 }

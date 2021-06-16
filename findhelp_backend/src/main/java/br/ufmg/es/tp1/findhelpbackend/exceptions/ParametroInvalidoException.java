@@ -1,4 +1,3 @@
-@ResponseStatus(HttpStatus.BAD_REQUEST)
 package br.ufmg.es.tp1.findhelpbackend.exceptions;
 
 import org.springframework.http.HttpStatus;

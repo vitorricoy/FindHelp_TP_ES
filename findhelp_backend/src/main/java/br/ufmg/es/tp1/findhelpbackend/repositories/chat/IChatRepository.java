@@ -10,5 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface IChatRepository extends CrudRepository<Mensagem, UUID> {
-    List<Mensagem> findByRecipenteAndRemetente(UUID recipiente, UUID remetente);
+    List<Mensagem> findByDestinatarioAndRemetente(UUID destinatario, UUID remetente);
+    List<Mensagem> findByRemetente(UUID remetente);
+    List<Mensagem> findByDestinatario(UUID destinatario);
 }
