@@ -18,11 +18,15 @@ public class UsuarioService implements IUsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
+    private Usuario construirUsuario(String nome, String nomeUsuario, String senha, boolean psicologo) {
+        return new Usuario(UUID.randomUUID(), nome, nomeUsuario, senha, psicologo);
+    }
+
     public UUID salvarDadosUsuario(String nome, String nomeUsuario, String senha, boolean psicologo) {
         if(nome == null|| nomeUsuario == null || senha == null || nome.isEmpty() || nomeUsuario.isEmpty() || senha.isEmpty()) {
             throw new ParametroInvalidoException();
         }
-        Usuario novoUsuario = new Usuario(UUID.randomUUID(), nome, nomeUsuario, senha, psicologo);
+        Usuario novoUsuario = construirUsuario(nome, nomeUsuario, senha, psicologo);
         usuarioRepository.save(novoUsuario);
         return novoUsuario.getId();
     }
