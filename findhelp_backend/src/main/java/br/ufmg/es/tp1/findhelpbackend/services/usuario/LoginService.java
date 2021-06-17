@@ -5,9 +5,11 @@ import br.ufmg.es.tp1.findhelpbackend.exceptions.ParametroInvalidoException;
 import br.ufmg.es.tp1.findhelpbackend.models.Usuario;
 import br.ufmg.es.tp1.findhelpbackend.repositories.usuario.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Service
 public class LoginService implements ILoginService {
     private final IUsuarioRepository usuarioRepository;
 
