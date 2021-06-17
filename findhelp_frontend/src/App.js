@@ -1,9 +1,9 @@
 import React from "react";
+import Chat from './pages/chat/Chat'
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 
 export default function App() {
@@ -25,8 +25,4 @@ export default function App() {
 
 function Login() {
   return <h2>Login</h2>;
-}
-
-function Chat() {
-  return <h2>Chat</h2>;
 }
