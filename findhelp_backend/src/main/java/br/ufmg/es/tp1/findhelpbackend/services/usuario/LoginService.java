@@ -16,12 +16,16 @@ public class LoginService implements ILoginService {
         this.usuarioRepository = usuarioRepository;
     }
 
+    private boolean senhaUsuarioInvalida(Usuario usuario, String senha) {
+        return usuario == null|| !usuario.getSenha().equals(senha);
+    }
+
     public UUID logarUsuario(String nomeUsuario, String senha) {
         if(nomeUsuario == null|| senha == null|| nomeUsuario.isEmpty()|| senha.isEmpty()) {
             throw new ParametroInvalidoException();
         }
         Usuario usuario = usuarioRepository.findByNomeUsuario(nomeUsuario);
-        if(usuario == null|| !usuario.getSenha().equals(senha)) {
+        if(senhaUsuarioInvalida(usuario, senha)) {
             throw new LoginInvalidoException();
         }
         return usuario.getId();
