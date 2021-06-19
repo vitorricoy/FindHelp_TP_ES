@@ -22,15 +22,18 @@ public class Mensagem {
 
     private Usuario destinatario;
 
+    private Boolean vista;
+
     private LocalDateTime horarioEnvio;
 
     public Mensagem() { }
 
-    public Mensagem(UUID id, String conteudo, Usuario remetente, Usuario destinatario, LocalDateTime horarioEnvio) {
+    public Mensagem(UUID id, String conteudo, Usuario remetente, Usuario destinatario, boolean vista, LocalDateTime horarioEnvio) {
         this.id = id;
         this.conteudo = conteudo;
         this.remetente = remetente;
         this.destinatario = destinatario;
+        this.vista = vista;
         this.horarioEnvio = horarioEnvio;
     }
 
@@ -64,6 +67,14 @@ public class Mensagem {
 
     public void setDestinatario(Usuario recipiente) {
         this.destinatario = recipiente;
+    }
+
+    public Boolean isVista() {
+        return vista;
+    }
+
+    public void setVista(Boolean vista) {
+        this.vista = vista;
     }
 
     public LocalDateTime getHorarioEnvio() {

@@ -13,4 +13,5 @@ public interface IChatRepository extends CrudRepository<Mensagem, UUID> {
     List<Mensagem> findByDestinatarioAndRemetente(UUID destinatario, UUID remetente);
     List<Mensagem> findByRemetente(UUID remetente);
     List<Mensagem> findByDestinatario(UUID destinatario);
+    List<Mensagem> findAllByVistaAndDestinatarioAndRemetente(boolean vista, UUID destinatario, UUID remetente);
 }

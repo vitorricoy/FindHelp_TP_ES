@@ -1,5 +1,6 @@
 package br.ufmg.es.tp1.findhelpbackend.controllers.chat;
 
+import br.ufmg.es.tp1.findhelpbackend.models.HistoricoConversa;
 import br.ufmg.es.tp1.findhelpbackend.models.Mensagem;
 import br.ufmg.es.tp1.findhelpbackend.models.Usuario;
 import br.ufmg.es.tp1.findhelpbackend.services.chat.IChatService;
@@ -33,8 +34,13 @@ public class ChatController {
         return chatService.salvarMensagemConversa(idRemetente, idDestinatario, conteudo);
     }
 
+    @PostMapping(value="/vista")
+    boolean marcarMensagensVistas(UUID idUsuario, UUID idContato) {
+        return chatService.marcarMensagensVistas(idUsuario, idContato);
+    }
+
     @GetMapping(value = "/historico")
-    List<Usuario> buscarHistoricoConversas(UUID idUsuario) {
+    List<HistoricoConversa> buscarHistoricoConversas(UUID idUsuario) {
         return chatService.buscarHistoricoConversas(idUsuario);
     }
 
