@@ -4,7 +4,6 @@ import {
     MainContainer,
     ChatContainer,
     MessageList,
-    Message,
     MessageInput,
     Sidebar,
     Button,
@@ -14,25 +13,30 @@ Avatar
 } from "@chatscope/chat-ui-kit-react";
 
 import React from "react";
+import ChatService from "../../services/ChatService";
 
 class Chat extends React.Component {
 
     constructor(props) {
         super(props);
+        this._chatService = new ChatService();
         this.state = {mensagens: [],
                       exibindoDisponiveis: false,
-                      historicoConversas: this.getHistoricoConversas(),
+                      historicoConversas: [],
                       disponiveisConversa: []};
         this.mudarListaConversas = this.mudarListaConversas.bind(this);
         this.getTextoBotao = this.getTextoBotao.bind(this);
-        this.getHistoricoDisponiveis = this.getHistoricoDisponiveis.bind(this);
+        this.getDisponiveis = this.getDisponiveis.bind(this);
         this.getHistoricoConversas = this.getHistoricoConversas.bind(this);
         this.getListaConversas = this.getListaConversas.bind(this);
+        this.enviarMensagem = this.enviarMensagem.bind(this);
+        this.atualizarConversa = this.atualizarConversa.bind(this);
+        this.getHistoricoConversas();
     }
 
     mudarListaConversas() {
         if(!this.state.exibindoDisponiveis) {
-            this.getHistoricoDisponiveis();
+            this.getDisponiveis();
         } else {
             this.getHistoricoConversas();
         }
@@ -40,46 +44,24 @@ class Chat extends React.Component {
         this.setState({exibindoDisponiveis: !this.state.exibindoDisponiveis});
     }
 
-    getHistoricoDisponiveis() {
-        return [
-            {
-                "nome": "Jose",
-                "naoVistas": 0
-            },
-            {
-                "nome": "Maria",
-                "naoVistas": 0
-            },
-            {
-                "nome": "Joao",
-                "naoVistas": 12
-            },
-            {
-                "nome": "Carlos",
-                "naoVistas": 0
-            }
-        ]
+    getDisponiveis() {
+        this._chatService.getDisponiveis()
+            .then((disponiveis) => {
+                this.setState({disponiveisConversa: disponiveis});
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
     getHistoricoConversas() {
-        return [
-            {
-                "nome": "Lilly",
-                "naoVistas": 2
-            },
-            {
-                "nome": "Joe",
-                "naoVistas": 0
-            },
-            {
-                "nome": "Emily",
-                "naoVistas": 12
-            },
-            {
-                "nome": "Kai",
-                "naoVistas": 5
-            }
-        ]
+        this._chatService.getHistoricoConversas()
+            .then((historico) => {
+                this.setState({historicoConversas: historico});
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
     getTextoBotao() {
@@ -95,7 +77,7 @@ class Chat extends React.Component {
         if(this.state.exibindoDisponiveis) {
             for(let elemento of this.state.disponiveisConversa) {
                 elementosLista.push(
-                    <Conversation className='conversation' unreadCnt={elemento.naoVistas}>
+                    <Conversation className='conversation' unreadCnt={elemento.naoVisto}>
                         <Avatar name={elemento.nome}/>
                     </Conversation>
                 )
@@ -103,13 +85,33 @@ class Chat extends React.Component {
         } else {
             for(let elemento of this.state.historicoConversas) {
                 elementosLista.push(
-                    <Conversation className='conversation' unreadCnt={elemento.naoVistas}>
+                    <Conversation className='conversation' unreadCnt={elemento.naoVisto}>
                         <Avatar name={elemento.nome}/>
                     </Conversation>
                 )
             }
         }
         return elementosLista;
+    }
+
+    atualizarConversa() {
+        this._chatService.getMensagensConversa()
+            .then((mensagens)=> {
+                this.setState({mensagens: mensagens});
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+    enviarMensagem(mensagem) {
+        this._chatService.enviarMensagem(mensagem)
+            .then(() => {
+               this.atualizarConversa();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
     render() {
@@ -126,22 +128,9 @@ class Chat extends React.Component {
                 </Sidebar>
                 <ChatContainer className="chat-container">
                     <MessageList>
-                        <Message
-                            model={{
-                                message: "Hello my friend",
-                                sentTime: "just now",
-                                direction: 'incoming'
-                            }}
-                        />
-                        <Message
-                            model={{
-                                message: "Hello my friend",
-                                sentTime: "just now",
-                                direction: 'outgoing'
-                            }}
-                        />
+                        {this.enviarMensagem}
                     </MessageList>
-                    <MessageInput attachButton={false} placeholder="Digite sua mensagem..." />
+                    <MessageInput attachButton={false} placeholder="Digite sua mensagem..." onSend = {this.enviarMensagem} />
                 </ChatContainer>
             </MainContainer>
         </div>;
