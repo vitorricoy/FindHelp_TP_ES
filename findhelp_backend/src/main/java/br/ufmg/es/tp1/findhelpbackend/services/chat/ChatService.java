@@ -104,15 +104,15 @@ public class ChatService implements IChatService {
         return usuariosNaoVistos;
     }
 
-    private HistoricoConversa construirHistoricoConversa(String nome, int naoVisto) {
-        return new HistoricoConversa(nome, naoVisto);
+    private HistoricoConversa construirHistoricoConversa(String nome, int naoVisto, UUID idContato) {
+        return new HistoricoConversa(nome, naoVisto, idContato);
     }
 
     private List<HistoricoConversa> construirListaHistoricoConversa(List<Mensagem> enviadas, List<Mensagem> recebidas) {
         Map<Pair<UUID, String>, Integer> usuariosNaoVistos = extrairUsuariosConversa(enviadas, recebidas);
         List<HistoricoConversa> historicoConversas = new ArrayList<>();
         usuariosNaoVistos.forEach((key, value) -> {
-            HistoricoConversa novoHistorico = construirHistoricoConversa(key.getSecond(), value);
+            HistoricoConversa novoHistorico = construirHistoricoConversa(key.getSecond(), value, key.getFirst());
             historicoConversas.add(novoHistorico);
         });
         return historicoConversas;
