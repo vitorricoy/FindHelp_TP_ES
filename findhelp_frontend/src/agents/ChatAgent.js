@@ -4,12 +4,13 @@ import axios from 'axios';
 class ChatAgent {
 
     constructor() {
-        this.getHistoricoConversas.bind(this);
-        this.enviarMensagem.bind(this);
-        this.getMensagensConversa.bind(this);
+        this.obterHistoricoConversas = this.obterHistoricoConversas.bind(this);
+        this.enviarMensagem = this.enviarMensagem.bind(this);
+        this.obterMensagensConversa = this.obterMensagensConversa.bind(this);
+        this.marcarMensagensVistas = this.marcarMensagensVistas.bind(this);
     }
 
-    getHistoricoConversas(idUsuario) {
+    obterHistoricoConversas(idUsuario) {
         return new Promise((resolve, reject) => {
             axios.get(Constantes.host + Constantes.historico, {
                 params: {
@@ -20,15 +21,40 @@ class ChatAgent {
         });
     }
 
-    enviarMensagem(mensagem) {
+    enviarMensagem(mensagem, idUsuario, idContato) {
         return new Promise((resolve, reject) => {
-
+            axios.post(Constantes.host + Constantes.chat, {
+                params: {
+                    conteudo: mensagem,
+                    idRemetente: idUsuario,
+                    idDestinatario: idContato
+                }})
+                .then(response => resolve(response.data.total))
+                .catch((err) => reject(err));
         });
     }
 
-    getMensagensConversa() {
+    obterMensagensConversa(idUsuario, idContato) {
         return new Promise((resolve, reject) => {
+            axios.get(Constantes.host + Constantes.chat, {
+                params: {
+                    idUsuario: idUsuario,
+                    idContato: idContato
+                }})
+                .then(response => resolve(response.data.total))
+                .catch((err) => reject(err));
+        });
+    }
 
+    marcarMensagensVistas(idUsuario, idContato) {
+        return new Promise((resolve, reject) => {
+            axios.post(Constantes.host + Constantes.visualizarMensagens, {
+                params: {
+                    idUsuario: idUsuario,
+                    idContato: idContato
+                }})
+                .then(response => resolve(response.data.total))
+                .catch((err) => reject(err));
         });
     }
 }
