@@ -52,8 +52,8 @@ public class ChatService implements IChatService {
         if(idContato == null || idUsuario == null) {
             throw new ParametroInvalidoException();
         }
-        List<Mensagem> enviadasPeloUsuario = chatRepository.findByDestinatarioAndRemetente(idContato, idUsuario);
-        List<Mensagem> recebidasPeloUsuario = chatRepository.findByDestinatarioAndRemetente(idUsuario, idContato);
+        List<Mensagem> enviadasPeloUsuario = chatRepository.findByDestinatarioAndRemetente(usuarioService.buscarUsuario(idContato), usuarioService.buscarUsuario(idUsuario));
+        List<Mensagem> recebidasPeloUsuario = chatRepository.findByDestinatarioAndRemetente(usuarioService.buscarUsuario(idUsuario), usuarioService.buscarUsuario(idContato));
         List<Mensagem> todasMensagens = combinarOrdenarMensagens(enviadasPeloUsuario, recebidasPeloUsuario);
         return todasMensagens;
     }
@@ -63,7 +63,7 @@ public class ChatService implements IChatService {
             throw new ParametroInvalidoException();
         }
         List<Mensagem> mensagensNaoVistas = chatRepository.
-                findAllByVistaAndDestinatarioAndRemetente(false, idUsuario, idContato);
+                findAllByVistaAndDestinatarioAndRemetente(false, usuarioService.buscarUsuario(idUsuario), usuarioService.buscarUsuario(idContato));
 
         for(Mensagem mensagem : mensagensNaoVistas) {
             mensagem.setVista(true);
@@ -95,9 +95,9 @@ public class ChatService implements IChatService {
         }
 
         for(Mensagem mensagem : enviadas) {
-            Pair<UUID, String> pairUsuario = construirPairUsuario(mensagem.getRemetente());
+            Pair<UUID, String> pairUsuario = construirPairUsuario(mensagem.getDestinatario());
             if(!usuariosNaoVistos.containsKey(pairUsuario)) {
-                usuariosNaoVistos.put(pairUsuario, (mensagem.isVista())?0:1);
+                usuariosNaoVistos.put(pairUsuario, 0);
             }
         }
 
@@ -123,8 +123,8 @@ public class ChatService implements IChatService {
         if(idUsuario == null) {
             throw new ParametroInvalidoException();
         }
-        List<Mensagem> mensagensEnviadas = chatRepository.findByRemetente(idUsuario);
-        List<Mensagem> mensagensRecebidas = chatRepository.findByDestinatario(idUsuario);
+        List<Mensagem> mensagensEnviadas = chatRepository.findByRemetente(usuarioService.buscarUsuario(idUsuario));
+        List<Mensagem> mensagensRecebidas = chatRepository.findByDestinatario(usuarioService.buscarUsuario(idUsuario));
         List<HistoricoConversa> historico = construirListaHistoricoConversa(mensagensEnviadas, mensagensRecebidas);
         return historico;
     }

@@ -1,14 +1,14 @@
 package br.ufmg.es.tp1.findhelpbackend.controllers.usuario;
 
+import br.ufmg.es.tp1.findhelpbackend.models.RequisicaoSalvarDadosUsuario;
 import br.ufmg.es.tp1.findhelpbackend.services.usuario.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "/usuario")
 public class UsuarioController {
     private final IUsuarioService usuarioService;
@@ -19,7 +19,8 @@ public class UsuarioController {
     }
 
     @PostMapping
-    UUID salvarDadosUsuario(String nome, String nomeUsuario, String senha, boolean psicologo) {
-        return usuarioService.salvarDadosUsuario(nome, nomeUsuario, senha, psicologo);
+    UUID salvarDadosUsuario(@RequestBody RequisicaoSalvarDadosUsuario requisicao) {
+        return usuarioService.salvarDadosUsuario(requisicao.getNome(), requisicao
+                .getNomeUsuario(), requisicao.getSenha(), requisicao.isPsicologo());
     }
 }

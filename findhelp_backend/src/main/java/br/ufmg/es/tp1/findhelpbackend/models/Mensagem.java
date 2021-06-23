@@ -1,5 +1,7 @@
 package br.ufmg.es.tp1.findhelpbackend.models;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -9,6 +11,7 @@ import java.util.UUID;
 public class Mensagem {
 
     @Id
+    @Type(type="org.hibernate.type.UUIDCharType")
     private UUID id;
 
     private String conteudo;
@@ -19,7 +22,6 @@ public class Mensagem {
 
     @ManyToOne
     @JoinColumn(name = "destinatario")
-
     private Usuario destinatario;
 
     private Boolean vista;
