@@ -1,6 +1,6 @@
 import './Chat.css'
 import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
-import Message, {
+import {
     MainContainer,
     ChatContainer,
     MessageList,
@@ -9,7 +9,8 @@ import Message, {
     Button,
     ConversationList,
     Conversation,
-Avatar
+    Avatar,
+    Message
 } from "@chatscope/chat-ui-kit-react";
 
 import React from "react";
@@ -23,45 +24,60 @@ class Chat extends React.Component {
         this._idUsuario = localStorage.getItem('idUsuario');
         this.state = {mensagens: [],
                       exibindoDisponiveis: false,
-                      historicoConversas: [],
-                      disponiveisConversa: [],
+                      conversasExibidas: [],
                       idContato: null};
+    }
+
+    componentDidMount() {
         this.mudarListaConversas = this.mudarListaConversas.bind(this);
         this.obterTextoBotao = this.obterTextoBotao.bind(this);
-        this.getDisponiveis = this.getDisponiveis.bind(this);
-        this.getHistoricoConversas = this.getHistoricoConversas.bind(this);
+        this.obterDisponiveis = this.obterDisponiveis.bind(this);
+        this.obterHistoricoConversas = this.obterHistoricoConversas.bind(this);
         this.obterListaConversas = this.obterListaConversas.bind(this);
         this.enviarMensagem = this.enviarMensagem.bind(this);
         this.atualizarConversa = this.atualizarConversa.bind(this);
         this.obterMensagens = this.obterMensagens.bind(this);
         this.ativarConversa = this.ativarConversa.bind(this);
-        this.getHistoricoConversas();
+        setInterval(() => {
+            if(this.state.exibindoDisponiveis) {
+                this.obterDisponiveis();
+            } else {
+                this.obterHistoricoConversas();
+            }
+            if(this.state.idContato) {
+                this.atualizarConversa();
+                this._chatService.marcarMensagensVistas(this.state.idContato)
+                    .catch((err) => {
+                        console.log(err);
+                    })
+            }
+        }, 500);
     }
 
     mudarListaConversas() {
         if(!this.state.exibindoDisponiveis) {
-            this.getDisponiveis();
+            this.obterDisponiveis();
         } else {
-            this.getHistoricoConversas();
+            this.obterHistoricoConversas();
         }
 
         this.setState({exibindoDisponiveis: !this.state.exibindoDisponiveis});
     }
 
-    getDisponiveis() {
+    obterDisponiveis() {
         this._chatService.getDisponiveis()
             .then((disponiveis) => {
-                this.setState({disponiveisConversa: disponiveis});
+                this.setState({conversasExibidas: disponiveis});
             })
             .catch((err) => {
                 console.log(err);
             });
     }
 
-    getHistoricoConversas() {
+    obterHistoricoConversas() {
         this._chatService.obterHistoricoConversas()
             .then((historico) => {
-                this.setState({historicoConversas: historico});
+                this.setState({conversasExibidas: historico});
             })
             .catch((err) => {
                 console.log(err);
@@ -91,29 +107,16 @@ class Chat extends React.Component {
     }
 
     obterListaConversas() {
-        let elementosLista = []
-        if(this.state.exibindoDisponiveis) {
-            for(let elemento of this.state.disponiveisConversa) {
-                elementosLista.push(
-                    <Conversation className='conversation' unreadCnt={elemento.naoVisto} onClick={this.ativarConversa(elemento.idContato)}>
-                        <Avatar name={elemento.nome}/>
-                    </Conversation>
-                )
-            }
-        } else {
-            for(let elemento of this.state.historicoConversas) {
-                elementosLista.push(
-                    <Conversation className='conversation' unreadCnt={elemento.naoVisto} onClick={this.ativarConversa(elemento.idContato)}>
-                        <Avatar name={elemento.nome}/>
-                    </Conversation>
-                )
-            }
-        }
-        return elementosLista;
+        return  this.state.conversasExibidas.map((elemento) =>
+            <Conversation key = {elemento.idContato} className='conversation' unreadCnt={elemento.naoVisto}
+                          onClick={() => this.ativarConversa(elemento.idContato)}>
+                <Avatar name={elemento.nomeContato}/>
+            </Conversation>
+        );
     }
 
     atualizarConversa() {
-        this._chatService.obterMensagensConversa()
+        this._chatService.obterMensagensConversa(this.state.idContato)
             .then((mensagens)=> {
                 this.setState({mensagens: mensagens});
             })
@@ -134,17 +137,19 @@ class Chat extends React.Component {
 
     obterMensagens() {
         let listaMensagens = [];
+        let cont = 0;
         for(let mensagem of this.state.mensagens) {
             let direcao = "incoming";
-            if(mensagem.destinatario !== this._idUsuario) {
+            if(mensagem.destinatario.id !== this._idUsuario) {
                 direcao = "outgoing";
             }
-            listaMensagens.push(<Message model={{
+            listaMensagens.push(<Message key={cont} model={{
                 message: mensagem.conteudo,
                 sentTime: mensagem.horarioEnvio,
                 direction: direcao,
                 position: "single"
             }} />);
+            cont+=1;
         }
         return listaMensagens;
     }

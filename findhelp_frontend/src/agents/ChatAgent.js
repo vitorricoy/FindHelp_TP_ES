@@ -16,7 +16,7 @@ class ChatAgent {
                 params: {
                     idUsuario: idUsuario
                 }})
-                .then(response => resolve(response.data.total))
+                .then(response => resolve(response.data))
                 .catch((err) => reject(err));
         });
     }
@@ -24,13 +24,12 @@ class ChatAgent {
     enviarMensagem(mensagem, idUsuario, idContato) {
         return new Promise((resolve, reject) => {
             axios.post(Constantes.host + Constantes.chat, {
-                params: {
                     conteudo: mensagem,
                     idRemetente: idUsuario,
                     idDestinatario: idContato
-                }})
-                .then(response => resolve(response.data.total))
-                .catch((err) => reject(err));
+                })
+            .then(response => resolve(response.data))
+            .catch((err) => reject(err));
         });
     }
 
@@ -41,7 +40,7 @@ class ChatAgent {
                     idUsuario: idUsuario,
                     idContato: idContato
                 }})
-                .then(response => resolve(response.data.total))
+                .then(response => resolve(response.data))
                 .catch((err) => reject(err));
         });
     }
@@ -49,12 +48,11 @@ class ChatAgent {
     marcarMensagensVistas(idUsuario, idContato) {
         return new Promise((resolve, reject) => {
             axios.post(Constantes.host + Constantes.visualizarMensagens, {
-                params: {
-                    idUsuario: idUsuario,
-                    idContato: idContato
-                }})
-                .then(response => resolve(response.data.total))
-                .catch((err) => reject(err));
+                idUsuario: idUsuario,
+                idContato: idContato
+            })
+            .then(response => resolve(response.data))
+            .catch((err) => reject(err));
         });
     }
 }
