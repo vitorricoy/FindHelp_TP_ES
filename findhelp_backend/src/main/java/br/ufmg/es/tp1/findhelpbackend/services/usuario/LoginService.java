@@ -36,13 +36,17 @@ public class LoginService implements ILoginService {
         return usuario.getId();
     }
 
-    public List<HistoricoConversa> buscarPsicologosOnline() {
-        List<Usuario> usuariosOnline = usuarioRepository.findByAtivoAndPsicologo(true, true);
+    private List<HistoricoConversa> construirListaPsicologosOnline(List<Usuario> psicologosOnline) {
         List<HistoricoConversa> retorno = new ArrayList<>();
-        for(Usuario usuario:usuariosOnline) {
+        for(Usuario usuario:psicologosOnline) {
             retorno.add(new HistoricoConversa(usuario.getNome(), 0, usuario.getId()));
         }
         return retorno;
+    }
+
+    public List<HistoricoConversa> buscarPsicologosOnline() {
+        List<Usuario> psicologosOnline = usuarioRepository.findByAtivoAndPsicologo(true, true);
+        return construirListaPsicologosOnline(psicologosOnline);
     }
 
 
