@@ -1,5 +1,6 @@
 package br.ufmg.es.tp1.findhelpbackend.services.chat;
 
+import br.ufmg.es.tp1.findhelpbackend.models.HistoricoConversa;
 import br.ufmg.es.tp1.findhelpbackend.models.Mensagem;
 import br.ufmg.es.tp1.findhelpbackend.models.Usuario;
 
@@ -10,5 +11,6 @@ public interface IChatService {
 
     UUID salvarMensagemConversa(UUID idRecipiente, UUID idRemetente, String conteudo);
     List<Mensagem> buscarMensagensConversa(UUID idRemetente, UUID idDestinatario);
-    List<Usuario> buscarHistoricoConversas(UUID idUsuario);
+    List<HistoricoConversa> buscarHistoricoConversas(UUID idUsuario);
+    boolean marcarMensagensVistas(UUID idUsuario, UUID idContato);
 }

@@ -1,44 +1,19 @@
 package br.ufmg.es.tp1.findhelpbackend.models;
 
-import org.hibernate.annotations.Type;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.UUID;
-
-@Entity
-@Table
-public class Usuario {
-    @Id
-    @Type(type="org.hibernate.type.UUIDCharType")
-    private UUID id;
-
+public class RequisicaoSalvarDadosUsuario {
     private String nome;
-
     private String nomeUsuario;
-
     private String senha;
-
     private boolean psicologo;
 
-    public Usuario(UUID id, String nome, String nomeUsuario, String senha, boolean psicologo) {
-        this.id = id;
+    public RequisicaoSalvarDadosUsuario(String nome, String nomeUsuario, String senha, boolean psicologo) {
         this.nome = nome;
         this.nomeUsuario = nomeUsuario;
         this.senha = senha;
         this.psicologo = psicologo;
     }
 
-    public Usuario() {
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
+    public RequisicaoSalvarDadosUsuario() {
     }
 
     public String getNome() {

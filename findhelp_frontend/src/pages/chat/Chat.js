@@ -4,85 +4,87 @@ import {
     MainContainer,
     ChatContainer,
     MessageList,
-    Message,
     MessageInput,
     Sidebar,
     Button,
     ConversationList,
     Conversation,
-Avatar
+    Avatar,
+    Message
 } from "@chatscope/chat-ui-kit-react";
 
 import React from "react";
+import ChatService from "../../services/ChatService";
 
 class Chat extends React.Component {
 
     constructor(props) {
         super(props);
+        this._chatService = new ChatService();
+        this._idUsuario = localStorage.getItem('idUsuario');
         this.state = {mensagens: [],
                       exibindoDisponiveis: false,
-                      historicoConversas: this.getHistoricoConversas(),
-                      disponiveisConversa: []};
+                      conversasExibidas: [],
+                      idContato: null};
+    }
+
+    componentDidMount() {
         this.mudarListaConversas = this.mudarListaConversas.bind(this);
-        this.getTextoBotao = this.getTextoBotao.bind(this);
-        this.getHistoricoDisponiveis = this.getHistoricoDisponiveis.bind(this);
-        this.getHistoricoConversas = this.getHistoricoConversas.bind(this);
-        this.getListaConversas = this.getListaConversas.bind(this);
+        this.obterTextoBotao = this.obterTextoBotao.bind(this);
+        this.obterDisponiveis = this.obterDisponiveis.bind(this);
+        this.obterHistoricoConversas = this.obterHistoricoConversas.bind(this);
+        this.obterListaConversas = this.obterListaConversas.bind(this);
+        this.enviarMensagem = this.enviarMensagem.bind(this);
+        this.atualizarConversa = this.atualizarConversa.bind(this);
+        this.obterMensagens = this.obterMensagens.bind(this);
+        this.ativarConversa = this.ativarConversa.bind(this);
+        setInterval(() => {
+            if(this.state.exibindoDisponiveis) {
+                this.obterDisponiveis();
+            } else {
+                this.obterHistoricoConversas();
+            }
+            if(this.state.idContato) {
+                this.atualizarConversa();
+                this._chatService.marcarMensagensVistas(this.state.idContato)
+                    .catch((err) => {
+                        console.log(err);
+                    })
+            }
+        }, 500);
     }
 
     mudarListaConversas() {
         if(!this.state.exibindoDisponiveis) {
-            this.getHistoricoDisponiveis();
+            this.obterDisponiveis();
         } else {
-            this.getHistoricoConversas();
+            this.obterHistoricoConversas();
         }
 
         this.setState({exibindoDisponiveis: !this.state.exibindoDisponiveis});
     }
 
-    getHistoricoDisponiveis() {
-        return [
-            {
-                "nome": "Jose",
-                "naoVistas": 0
-            },
-            {
-                "nome": "Maria",
-                "naoVistas": 0
-            },
-            {
-                "nome": "Joao",
-                "naoVistas": 12
-            },
-            {
-                "nome": "Carlos",
-                "naoVistas": 0
-            }
-        ]
+    obterDisponiveis() {
+        this._chatService.getDisponiveis()
+            .then((disponiveis) => {
+                this.setState({conversasExibidas: disponiveis});
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
-    getHistoricoConversas() {
-        return [
-            {
-                "nome": "Lilly",
-                "naoVistas": 2
-            },
-            {
-                "nome": "Joe",
-                "naoVistas": 0
-            },
-            {
-                "nome": "Emily",
-                "naoVistas": 12
-            },
-            {
-                "nome": "Kai",
-                "naoVistas": 5
-            }
-        ]
+    obterHistoricoConversas() {
+        this._chatService.obterHistoricoConversas()
+            .then((historico) => {
+                this.setState({conversasExibidas: historico});
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
-    getTextoBotao() {
+    obterTextoBotao() {
         if(this.state.exibindoDisponiveis) {
             return "Mostrar conversas anteriores";
         } else {
@@ -90,58 +92,85 @@ class Chat extends React.Component {
         }
     }
 
-    getListaConversas() {
-        let elementosLista = []
-        if(this.state.exibindoDisponiveis) {
-            for(let elemento of this.state.disponiveisConversa) {
-                elementosLista.push(
-                    <Conversation className='conversation' unreadCnt={elemento.naoVistas}>
-                        <Avatar name={elemento.nome}/>
-                    </Conversation>
-                )
+    ativarConversa(idContato) {
+        this._chatService.obterMensagensConversa(idContato)
+            .then((mensagens) => {
+                this.setState({mensagens: mensagens, idContato: idContato});
+                this._chatService.marcarMensagensVistas(idContato)
+                    .catch((err) => {
+                        console.log(err);
+                    })
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+    obterListaConversas() {
+        return  this.state.conversasExibidas.map((elemento) =>
+            <Conversation key = {elemento.idContato} className='conversation' unreadCnt={elemento.naoVisto}
+                          onClick={() => this.ativarConversa(elemento.idContato)}>
+                <Avatar name={elemento.nomeContato}/>
+            </Conversation>
+        );
+    }
+
+    atualizarConversa() {
+        this._chatService.obterMensagensConversa(this.state.idContato)
+            .then((mensagens)=> {
+                this.setState({mensagens: mensagens});
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+    enviarMensagem(mensagem) {
+        this._chatService.enviarMensagem(mensagem, this.state.idContato)
+            .then(() => {
+               this.atualizarConversa();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+    obterMensagens() {
+        let listaMensagens = [];
+        let cont = 0;
+        for(let mensagem of this.state.mensagens) {
+            let direcao = "incoming";
+            if(mensagem.destinatario.id !== this._idUsuario) {
+                direcao = "outgoing";
             }
-        } else {
-            for(let elemento of this.state.historicoConversas) {
-                elementosLista.push(
-                    <Conversation className='conversation' unreadCnt={elemento.naoVistas}>
-                        <Avatar name={elemento.nome}/>
-                    </Conversation>
-                )
-            }
+            listaMensagens.push(<Message key={cont} model={{
+                message: mensagem.conteudo,
+                sentTime: mensagem.horarioEnvio,
+                direction: direcao,
+                position: "single"
+            }} />);
+            cont+=1;
         }
-        return elementosLista;
+        return listaMensagens;
     }
 
     render() {
         return <div className="pagina">
             <div className="botoes">
-                <Button onClick={this.mudarListaConversas}>{this.getTextoBotao()}</Button>
+                <Button onClick={this.mudarListaConversas}>{this.obterTextoBotao()}</Button>
                 <Button onClick={this.logout}>Sair</Button>
             </div>
             <MainContainer className="chat">
                 <Sidebar position="left">
                     <ConversationList>
-                        {this.getListaConversas()}
+                        {this.obterListaConversas()}
                     </ConversationList>
                 </Sidebar>
                 <ChatContainer className="chat-container">
                     <MessageList>
-                        <Message
-                            model={{
-                                message: "Hello my friend",
-                                sentTime: "just now",
-                                direction: 'incoming'
-                            }}
-                        />
-                        <Message
-                            model={{
-                                message: "Hello my friend",
-                                sentTime: "just now",
-                                direction: 'outgoing'
-                            }}
-                        />
+                        {this.obterMensagens()}
                     </MessageList>
-                    <MessageInput attachButton={false} placeholder="Digite sua mensagem..." />
+                    <MessageInput attachButton={false} placeholder="Digite sua mensagem..." onSend = {this.enviarMensagem} />
                 </ChatContainer>
             </MainContainer>
         </div>;
