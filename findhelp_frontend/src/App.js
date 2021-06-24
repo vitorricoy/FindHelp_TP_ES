@@ -1,5 +1,8 @@
 import React from "react";
 import Chat from './pages/chat/Chat'
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import Login from './pages/login/Login'
+import Cadastro from './pages/cadastro/Cadastro'
 import {
   BrowserRouter as Router,
   Switch,
@@ -9,20 +12,17 @@ import {
 export default function App() {
   return (
       <Router>
-        <div>
           <Switch>
             <Route path="/chat">
               <Chat />
+            </Route>
+            <Route path="/cadastro">
+              <Cadastro />
             </Route>
             <Route path="/">
               <Login />
             </Route>
           </Switch>
-        </div>
       </Router>
   );
-}
-
-function Login() {
-  return <h2>Login</h2>;
 }
