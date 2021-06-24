@@ -1,19 +1,27 @@
 import ChatAgent from "../agents/ChatAgent";
+import UsuarioAgent from "../agents/UsuarioAgent";
 
 class ChatService {
 
     constructor() {
         this._chatAgent = new ChatAgent();
-        this.getDisponiveis = this.getDisponiveis.bind(this);
+        this._usuarioAgent = new UsuarioAgent();
+        this.obterPsicologosDisponiveis = this.obterPsicologosDisponiveis.bind(this);
         this.obterHistoricoConversas = this.obterHistoricoConversas.bind(this);
         this.enviarMensagem = this.enviarMensagem.bind(this);
         this.obterMensagensConversa = this.obterMensagensConversa.bind(this);
         this.marcarMensagensVistas = this.marcarMensagensVistas.bind(this);
     }
 
-    getDisponiveis() {
+    obterPsicologosDisponiveis() {
         return new Promise((resolve, reject) => {
-
+            this._usuarioAgent.obterPsicologosDisponiveis()
+                .then((historicoConversa) => {
+                    resolve(historicoConversa);
+                })
+                .catch((err) => {
+                    reject(err);
+                });
         });
     }
 
@@ -26,7 +34,7 @@ class ChatService {
                 })
                 .catch((err) => {
                     reject(err);
-                })
+                });
         });
     }
 

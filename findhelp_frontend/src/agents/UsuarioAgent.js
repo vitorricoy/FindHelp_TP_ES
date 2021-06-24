@@ -42,6 +42,14 @@ class ChatAgent {
                 .catch((err) => reject(err));
         });
     }
+
+    obterPsicologosDisponiveis() {
+        return new Promise((resolve, reject) => {
+            axios.get(Constantes.host + Constantes.ativos)
+                .then(response => resolve(response.data))
+                .catch(err => reject(err));
+        });
+    }
 }
 
 export default ChatAgent;
