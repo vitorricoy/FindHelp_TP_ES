@@ -1,6 +1,7 @@
 package br.ufmg.es.tp1.findhelpbackend.controllers.usuario;
 
 import br.ufmg.es.tp1.findhelpbackend.models.HistoricoConversa;
+import br.ufmg.es.tp1.findhelpbackend.models.RequisicaoDeslogar;
 import br.ufmg.es.tp1.findhelpbackend.services.usuario.ILoginService;
 import br.ufmg.es.tp1.findhelpbackend.models.RequisicaoSalvarDadosUsuario;
 import br.ufmg.es.tp1.findhelpbackend.services.usuario.IUsuarioService;
@@ -41,7 +42,7 @@ public class UsuarioController {
     }
 
     @PostMapping(value = "/deslogar")
-    boolean deslogarUsuario(@RequestBody UUID IDUsuario) {
-        return loginService.deslogarUsuario(IDUsuario);
+    boolean deslogarUsuario(@RequestBody RequisicaoDeslogar requisicaoDeslogar) {
+        return loginService.deslogarUsuario(requisicaoDeslogar.getIdUsuario());
     }
 }

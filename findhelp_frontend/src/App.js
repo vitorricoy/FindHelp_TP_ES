@@ -12,10 +12,6 @@ import {
 import UsuarioService from "./services/UsuarioService";
 
 export default function App() {
-  window.addEventListener('beforeunload', (event) => {
-    new UsuarioService().deslogarUsuario();
-    localStorage.removeItem('idUsuario');
-  });
   return (
       <Router>
           <Switch>

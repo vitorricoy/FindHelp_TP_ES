@@ -74,7 +74,7 @@ public class ChatService implements IChatService {
     }
 
     Pair<UUID, String> construirPairUsuario(Usuario usuario) {
-        return Pair.of(usuario.getId(), usuario.getNomeUsuario());
+        return Pair.of(usuario.getId(), usuario.getNome());
     }
 
     private Map<Pair<UUID, String>, Integer> extrairUsuariosConversa(List<Mensagem> enviadas, List<Mensagem> recebidas) {

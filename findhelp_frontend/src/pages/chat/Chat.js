@@ -21,6 +21,10 @@ class Chat extends React.Component {
 
     constructor(props) {
         super(props);
+        window.addEventListener('beforeunload', (event) => {
+            new UsuarioService().deslogarUsuario();
+            localStorage.removeItem('idUsuario');
+        });
         this._chatService = new ChatService();
         this._usuarioService = new UsuarioService();
         this._idUsuario = localStorage.getItem('idUsuario');
@@ -28,10 +32,16 @@ class Chat extends React.Component {
                       exibindoDisponiveis: false,
                       conversasExibidas: [],
                       idContato: null};
+        this.mudarListaConversas = this.mudarListaConversas.bind(this);
+        this.logout = this.logout.bind(this);
+        document.addEventListener("DOMContentLoaded", function(event) {
+            document.querySelectorAll('img').forEach(function(img){
+                img.onerror = function(){this.style.display='none';};
+            })
+        });
     }
 
     componentDidMount() {
-        this.mudarListaConversas = this.mudarListaConversas.bind(this);
         this.obterTextoBotao = this.obterTextoBotao.bind(this);
         this.obterDisponiveis = this.obterDisponiveis.bind(this);
         this.obterHistoricoConversas = this.obterHistoricoConversas.bind(this);
@@ -40,7 +50,6 @@ class Chat extends React.Component {
         this.atualizarConversa = this.atualizarConversa.bind(this);
         this.obterMensagens = this.obterMensagens.bind(this);
         this.ativarConversa = this.ativarConversa.bind(this);
-        this.logout = this.logout.bind(this);
         setInterval(() => {
             if(this.state.exibindoDisponiveis) {
                 this.obterDisponiveis();
@@ -55,16 +64,28 @@ class Chat extends React.Component {
                     })
             }
         }, 500);
+        // Volta para tela do login caso não esteja logado
+        if(!this._idUsuario) {
+            let url = window.location.href;
+            let tokens = url.split('/');
+            tokens.pop();
+            window.location.href = tokens.join('/');
+        }
     }
 
     logout() {
         this._usuarioService.deslogarUsuario()
-            .then((disponiveis) => {
-                this.setState({conversasExibidas: disponiveis});
+            .then((sucesso) => {
+                console.log('deslogou');
+                let url = window.location.href;
+                let tokens = url.split('/');
+                tokens.pop();
+                window.location.href = tokens.join('/');
             })
             .catch((err) => {
                 console.log(err);
             });
+
     }
 
     mudarListaConversas() {
@@ -78,7 +99,7 @@ class Chat extends React.Component {
     }
 
     obterDisponiveis() {
-        this._chatService.getDisponiveis()
+        this._chatService.obterPsicologosDisponiveis()
             .then((disponiveis) => {
                 this.setState({conversasExibidas: disponiveis});
             })
@@ -120,12 +141,14 @@ class Chat extends React.Component {
     }
 
     obterListaConversas() {
-        return  this.state.conversasExibidas.map((elemento) =>
-            <Conversation key = {elemento.idContato} className='conversation' unreadCnt={elemento.naoVisto}
-                          onClick={() => this.ativarConversa(elemento.idContato)}>
-                <Avatar name={elemento.nomeContato}/>
-            </Conversation>
-        );
+        return this.state.conversasExibidas.map((elemento) => {
+            if(elemento.idContato !== this._idUsuario) {
+                return <Conversation key = {elemento.idContato} className='conversation' unreadCnt={elemento.naoVisto}
+                              onClick={() => this.ativarConversa(elemento.idContato)} name={elemento.nomeContato}>
+                    <Avatar src="user.png"/>
+                </Conversation>;
+            }
+        });
     }
 
     atualizarConversa() {

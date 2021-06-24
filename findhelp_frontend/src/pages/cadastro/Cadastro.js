@@ -27,7 +27,16 @@ class Cadastro extends React.Component {
         this._usuarioService.cadastrarUsuario(this.state.nomeCompleto, this.state.nomeUsuario, md5(this.state.senha), this.state.psicologo)
             .then((idUsuario) => {
                 localStorage.setItem('idUsuario', idUsuario);
-                window.location.href+='chat';
+                this._usuarioService.logarUsuario(this.state.nomeUsuario, md5(this.state.senha))
+                    .then((sucesso) => {
+                        let url = window.location.href;
+                        let tokens = url.split('/');
+                        tokens.pop();
+                        window.location.href = tokens.join('/')+'/chat';
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             })
             .catch((err) => {
                 console.log(err);

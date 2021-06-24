@@ -2,9 +2,7 @@ package br.ufmg.es.tp1.findhelpbackend.models;
 
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -16,6 +14,7 @@ public class Usuario {
 
     private String nome;
 
+    @Column(unique=true)
     private String nomeUsuario;
 
     private String senha;

@@ -36,7 +36,7 @@ class ChatAgent {
     deslogarUsuario(idUsuario) {
         return new Promise((resolve, reject) => {
             axios.post(Constantes.host + Constantes.deslogar, {
-                idUsuario
+                idUsuario: idUsuario
             })
                 .then(response => resolve(response.data))
                 .catch((err) => reject(err));
