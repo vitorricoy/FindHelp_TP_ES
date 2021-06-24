@@ -3,10 +3,7 @@ package br.ufmg.es.tp1.findhelpbackend.controllers.usuario;
 import br.ufmg.es.tp1.findhelpbackend.services.usuario.ILoginService;
 import br.ufmg.es.tp1.findhelpbackend.services.usuario.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -29,7 +26,7 @@ public class UsuarioController {
     }
 
     @GetMapping(value = "/login")
-    UUID logarUsuario(String nomeUsuario, String senha) {
+    UUID logarUsuario(@RequestParam("nomeUsuario") String nomeUsuario,@RequestParam("senha") String senha) {
         return loginService.logarUsuario(nomeUsuario, senha);
     }
 }
