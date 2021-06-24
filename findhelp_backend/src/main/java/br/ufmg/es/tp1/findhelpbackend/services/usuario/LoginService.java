@@ -2,11 +2,14 @@ package br.ufmg.es.tp1.findhelpbackend.services.usuario;
 
 import br.ufmg.es.tp1.findhelpbackend.exceptions.LoginInvalidoException;
 import br.ufmg.es.tp1.findhelpbackend.exceptions.ParametroInvalidoException;
+import br.ufmg.es.tp1.findhelpbackend.models.HistoricoConversa;
 import br.ufmg.es.tp1.findhelpbackend.models.Usuario;
 import br.ufmg.es.tp1.findhelpbackend.repositories.usuario.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -32,4 +35,15 @@ public class LoginService implements ILoginService {
         }
         return usuario.getId();
     }
+
+    public List<HistoricoConversa> buscarPsicologosOnline() {
+        List<Usuario> usuariosOnline = usuarioRepository.findByAtivoAndPsicologo(true, true);
+        List<HistoricoConversa> retorno = new ArrayList<>();
+        for(Usuario usuario:usuariosOnline) {
+            retorno.add(new HistoricoConversa(usuario.getNome(), 0, usuario.getId()));
+        }
+        return retorno;
+    }
+
+
 }

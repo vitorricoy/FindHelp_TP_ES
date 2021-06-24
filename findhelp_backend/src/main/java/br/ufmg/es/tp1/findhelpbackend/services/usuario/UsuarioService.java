@@ -19,7 +19,7 @@ public class UsuarioService implements IUsuarioService {
     }
 
     private Usuario construirUsuario(String nome, String nomeUsuario, String senha, boolean psicologo) {
-        return new Usuario(UUID.randomUUID(), nome, nomeUsuario, senha, psicologo);
+        return new Usuario(UUID.randomUUID(), nome, nomeUsuario, senha, psicologo, false);
     }
 
     public UUID salvarDadosUsuario(String nome, String nomeUsuario, String senha, boolean psicologo) {

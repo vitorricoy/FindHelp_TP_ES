@@ -22,12 +22,15 @@ public class Usuario {
 
     private boolean psicologo;
 
-    public Usuario(UUID id, String nome, String nomeUsuario, String senha, boolean psicologo) {
+    private boolean ativo;
+
+    public Usuario(UUID id, String nome, String nomeUsuario, String senha, boolean psicologo, boolean ativo) {
         this.id = id;
         this.nome = nome;
         this.nomeUsuario = nomeUsuario;
         this.senha = senha;
         this.psicologo = psicologo;
+        this.ativo = ativo;
     }
 
     public Usuario() {
@@ -71,5 +74,13 @@ public class Usuario {
 
     public void setPsicologo(boolean psicologo) {
         this.psicologo = psicologo;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }
