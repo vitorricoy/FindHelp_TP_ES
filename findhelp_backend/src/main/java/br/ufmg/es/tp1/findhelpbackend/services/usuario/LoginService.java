@@ -14,11 +14,14 @@ import java.util.UUID;
 
 @Service
 public class LoginService implements ILoginService {
+
     private final IUsuarioRepository usuarioRepository;
+    private final IUsuarioService usuarioService;
 
     @Autowired
-    public LoginService(IUsuarioRepository usuarioRepository) {
+    public LoginService(IUsuarioRepository usuarioRepository, IUsuarioService usuarioService) {
         this.usuarioRepository = usuarioRepository;
+        this.usuarioService = usuarioService;
     }
 
     private boolean senhaUsuarioInvalida(Usuario usuario, String senha) {
@@ -53,6 +56,20 @@ public class LoginService implements ILoginService {
     public List<HistoricoConversa> buscarPsicologosOnline() {
         List<Usuario> psicologosOnline = usuarioRepository.findByAtivoAndPsicologo(true, true);
         return construirListaPsicologosOnline(psicologosOnline);
+    }
+
+    private void registarUsuarioComoInativo(Usuario usuario) {
+        usuario.setAtivo(false);
+        usuarioRepository.save(usuario);
+    }
+
+    public boolean deslogarUsuario(UUID IDUsuario) {
+        if(IDUsuario == null) {
+            throw new ParametroInvalidoException();
+        }
+        Usuario usuario = usuarioService.buscarUsuario(IDUsuario);
+        registarUsuarioComoInativo(usuario);
+        return true;
     }
 
 

@@ -39,4 +39,9 @@ public class UsuarioController {
     List<HistoricoConversa> buscarPsicologosOnline() {
         return loginService.buscarPsicologosOnline();
     }
+
+    @PostMapping
+    boolean deslogarUsuario(@RequestBody UUID IDUsuario) {
+        return loginService.deslogarUsuario(IDUsuario);
+    }
 }
