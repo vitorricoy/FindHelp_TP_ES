@@ -25,6 +25,11 @@ public class LoginService implements ILoginService {
         return usuario == null|| !usuario.getSenha().equals(senha);
     }
 
+    private void registarUsuarioComoAtivo(Usuario usuario) {
+        usuario.setAtivo(true);
+        usuarioRepository.save(usuario);
+    }
+
     public UUID logarUsuario(String nomeUsuario, String senha) {
         if(nomeUsuario == null|| senha == null|| nomeUsuario.isEmpty()|| senha.isEmpty()) {
             throw new ParametroInvalidoException();
@@ -33,6 +38,7 @@ public class LoginService implements ILoginService {
         if(senhaUsuarioInvalida(usuario, senha)) {
             throw new LoginInvalidoException();
         }
+        registarUsuarioComoAtivo(usuario);
         return usuario.getId();
     }
 
