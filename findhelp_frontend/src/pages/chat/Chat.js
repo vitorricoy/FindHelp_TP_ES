@@ -15,12 +15,14 @@ import {
 
 import React from "react";
 import ChatService from "../../services/ChatService";
+import UsuarioService from "../../services/UsuarioService";
 
 class Chat extends React.Component {
 
     constructor(props) {
         super(props);
         this._chatService = new ChatService();
+        this._usuarioService = new UsuarioService();
         this._idUsuario = localStorage.getItem('idUsuario');
         this.state = {mensagens: [],
                       exibindoDisponiveis: false,
@@ -38,6 +40,7 @@ class Chat extends React.Component {
         this.atualizarConversa = this.atualizarConversa.bind(this);
         this.obterMensagens = this.obterMensagens.bind(this);
         this.ativarConversa = this.ativarConversa.bind(this);
+        this.logout = this.logout.bind(this);
         setInterval(() => {
             if(this.state.exibindoDisponiveis) {
                 this.obterDisponiveis();
@@ -52,6 +55,16 @@ class Chat extends React.Component {
                     })
             }
         }, 500);
+    }
+
+    logout() {
+        this._usuarioService.deslogarUsuario()
+            .then((disponiveis) => {
+                this.setState({conversasExibidas: disponiveis});
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
     mudarListaConversas() {
