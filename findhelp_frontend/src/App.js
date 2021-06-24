@@ -13,9 +13,7 @@ import UsuarioService from "./services/UsuarioService";
 
 export default function App() {
   window.addEventListener('beforeunload', (event) => {
-    event.preventDefault();
     new UsuarioService().deslogarUsuario();
-    event.returnValue = ''
     localStorage.removeItem('idUsuario');
   });
   return (

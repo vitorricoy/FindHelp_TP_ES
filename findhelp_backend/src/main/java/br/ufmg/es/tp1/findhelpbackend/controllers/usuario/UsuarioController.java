@@ -40,7 +40,7 @@ public class UsuarioController {
         return loginService.buscarPsicologosOnline();
     }
 
-    @PostMapping
+    @PostMapping(value = "/deslogar")
     boolean deslogarUsuario(@RequestBody UUID IDUsuario) {
         return loginService.deslogarUsuario(IDUsuario);
     }
