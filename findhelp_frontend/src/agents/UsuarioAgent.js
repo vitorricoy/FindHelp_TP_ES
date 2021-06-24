@@ -32,6 +32,16 @@ class ChatAgent {
                 .catch((err) => reject(err));
         });
     }
+
+    deslogarUsuario(idUsuario) {
+        return new Promise((resolve, reject) => {
+            axios.post(Constantes.host + Constantes.deslogar, {
+                idUsuario
+            })
+                .then(response => resolve(response.data))
+                .catch((err) => reject(err));
+        });
+    }
 }
 
 export default ChatAgent;

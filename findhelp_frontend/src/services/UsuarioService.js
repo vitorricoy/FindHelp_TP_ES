@@ -31,6 +31,19 @@ class ChatService {
                 })
         });
     }
+
+    deslogarUsuario() {
+        return new Promise((resolve, reject) => {
+            let idUsuario = localStorage.getItem('idUsuario')
+            this._usuarioAgent.deslogarUsuario(idUsuario)
+                .then((sucesso) => {
+                    resolve(sucesso);
+                })
+                .catch((err) => {
+                    reject(err);
+                })
+        });
+    }
 }
 
 export default ChatService;
