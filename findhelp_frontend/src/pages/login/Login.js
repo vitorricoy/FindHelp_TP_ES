@@ -2,6 +2,7 @@ import React from "react";
 import "./Login.css";
 import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import UsuarioService from "../../services/UsuarioService";
+import md5 from 'md5';
 
 class Login extends React.Component {
 
@@ -26,7 +27,7 @@ class Login extends React.Component {
 
     logar(event) {
         event.preventDefault();
-        this._usuarioService.logarUsuario(this.state.nomeUsuario, this.state.senha)
+        this._usuarioService.logarUsuario(this.state.nomeUsuario, md5(this.state.senha))
             .then((idUsuario) => {
                 localStorage.setItem('idUsuario', idUsuario);
                 this.setState({mensagemErro: false});
