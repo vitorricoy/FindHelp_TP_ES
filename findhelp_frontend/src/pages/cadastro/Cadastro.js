@@ -1,6 +1,8 @@
 import React from "react";
 import "./Cadastro.css";
 import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import md5 from "md5";
+import UsuarioService from "../../services/UsuarioService";
 
 class Cadastro extends React.Component {
 
@@ -8,34 +10,51 @@ class Cadastro extends React.Component {
         super(props);
         this.state = {
             nomeUsuario: '',
-            senha: ''
+            nomeCompleto: '',
+            senha: '',
+            psicologo: false
         };
-    }
-
-    componentDidMount() {
-        this.validarFormulario  = this.validarFormulario.bind(this);
-        this.handleSubmit  = this.handleSubmit.bind(this);
+        this._usuarioService = new UsuarioService();
+        this.cadastrar  = this.cadastrar.bind(this);
         this.setNomeUsuario  = this.setNomeUsuario.bind(this);
+        this.setNomeCompleto  = this.setNomeCompleto.bind(this);
         this.setSenha  = this.setSenha.bind(this);
+        this.setPsicologo  = this.setPsicologo.bind(this);
     }
 
-    validarFormulario() {
-        return this.state.nomeUsuario.length > 0 && this.state.senha.length > 0;
-    }
-
-    handleSubmit(event) {
+    cadastrar(event) {
         event.preventDefault();
+        this._usuarioService.cadastrarUsuario(this.state.nomeCompleto, this.state.nomeUsuario, md5(this.state.senha), this.state.psicologo)
+            .then((idUsuario) => {
+                localStorage.setItem('idUsuario', idUsuario);
+                window.location.href+='chat';
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
     setNomeUsuario(valor) {
         this.setState({
-            nomeUsuario: valor
+            nomeUsuario: valor.target.value
+        });
+    }
+
+    setNomeCompleto(valor) {
+        this.setState({
+            nomeCompleto: valor.target.value
         });
     }
 
     setSenha(valor) {
         this.setState({
-            senha: valor
+            senha: valor.target.value
+        });
+    }
+
+    setPsicologo(valor) {
+        this.setState({
+            psicologo: valor.target.checked
         });
     }
 
@@ -47,27 +66,27 @@ class Cadastro extends React.Component {
 
                     <div className="form-group">
                         <label>Nome Completo</label>
-                        <input type="text" className="form-control" placeholder="Digite o nome completo" />
+                        <input type="text" className="form-control" placeholder="Digite o nome completo" value={this.state.nomeCompleto} onChange={this.setNomeCompleto}/>
                     </div>
 
                     <div className="form-group">
                         <label>Nome de Usuário</label>
-                        <input type="email" className="form-control" placeholder="Digite o nome de usuário" />
+                        <input type="email" className="form-control" placeholder="Digite o nome de usuário" value={this.state.nomeUsuario} onChange={this.setNomeUsuario}/>
                     </div>
 
                     <div className="form-group">
                         <label>Senha</label>
-                        <input type="password" className="form-control" placeholder="Digite a senha" />
+                        <input type="password" className="form-control" placeholder="Digite a senha" value={this.state.senha} onChange={this.setSenha}/>
                     </div>
 
                     <div className="form-group">
-                        <input type="checkbox" className="form-check-input" id="flexCheckDefault"/>
-                        <label className="form-check-label" htmlFor="flexCheckDefault">
+                        <input type="checkbox" className="form-check-input" id="psicologoCheck" checked={this.state.psicologo} onChange={this.setPsicologo}/>
+                        <label className="form-check-label" htmlFor="psicologoCheck">
                             Sou um psicólogo
                         </label>
                     </div>
 
-                    <button type="submit" className="btn btn-dark btn-lg btn-block">Cadastrar</button>
+                    <button type="submit" onClick={this.cadastrar} className="btn btn-dark btn-lg btn-block">Cadastrar</button>
                 </form>
             </div>
         </div>;

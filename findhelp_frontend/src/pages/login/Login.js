@@ -14,15 +14,10 @@ class Login extends React.Component {
             mensagemErro: false
         };
         this._usuarioService = new UsuarioService();
-        this.validarFormulario  = this.validarFormulario.bind(this);
         this.logar = this.logar.bind(this);
         this.setNomeUsuario  = this.setNomeUsuario.bind(this);
         this.setSenha  = this.setSenha.bind(this);
         this.mensagemErro = this.mensagemErro.bind(this);
-    }
-
-    validarFormulario() {
-        return this.state.nomeUsuario.length > 0 && this.state.senha.length > 0;
     }
 
     logar(event) {

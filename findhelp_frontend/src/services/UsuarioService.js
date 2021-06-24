@@ -5,6 +5,7 @@ class ChatService {
     constructor() {
         this._usuarioAgent = new UsuarioAgent();
         this.logarUsuario = this.logarUsuario.bind(this);
+        this.cadastrarUsuario = this.cadastrarUsuario.bind(this);
     }
 
     logarUsuario(nomeUsuario, senha) {
@@ -19,38 +20,11 @@ class ChatService {
         });
     }
 
-    enviarMensagem(mensagem, idContato) {
+    cadastrarUsuario(nomeCompleto, nomeUsuario, senha, psicologo) {
         return new Promise((resolve, reject) => {
-            let idUsuario = localStorage.getItem('idUsuario')
-            this._chatAgent.enviarMensagem(mensagem, idUsuario, idContato)
-                .then((idMensagem) => {
-                    resolve(idMensagem);
-                })
-                .catch((err) => {
-                    reject(err);
-                })
-        });
-    }
-
-    obterMensagensConversa(idContato) {
-        return new Promise((resolve, reject) => {
-            let idUsuario = localStorage.getItem('idUsuario')
-            this._chatAgent.obterMensagensConversa(idUsuario, idContato)
-                .then((mensagens) => {
-                    resolve(mensagens);
-                })
-                .catch((err) => {
-                    reject(err);
-                })
-        });
-    }
-
-    marcarMensagensVistas(idContato) {
-        return new Promise((resolve, reject) => {
-            let idUsuario = localStorage.getItem('idUsuario')
-            this._chatAgent.marcarMensagensVistas(idUsuario, idContato)
-                .then((sucesso) => {
-                    resolve(sucesso);
+            this._usuarioAgent.cadastrarUsuario(nomeCompleto, nomeUsuario, senha, psicologo)
+                .then((idUsuario) => {
+                    resolve(idUsuario);
                 })
                 .catch((err) => {
                     reject(err);

@@ -5,7 +5,7 @@ class ChatAgent {
 
     constructor() {
         this.logarUsuario = this.logarUsuario.bind(this);
-        this.enviarMensagem = this.enviarMensagem.bind(this);
+        this.cadastrarUsuario = this.cadastrarUsuario.bind(this);
     }
 
     logarUsuario(nomeUsuario, senha) {
@@ -20,12 +20,13 @@ class ChatAgent {
         });
     }
 
-    enviarMensagem(mensagem, idUsuario, idContato) {
+    cadastrarUsuario(nomeCompleto, nomeUsuario, senha, psicologo) {
         return new Promise((resolve, reject) => {
-            axios.post(Constantes.host + Constantes.chat, {
-                conteudo: mensagem,
-                idRemetente: idUsuario,
-                idDestinatario: idContato
+            axios.post(Constantes.host + Constantes.usuario, {
+                nome: nomeCompleto,
+                nomeUsuario: nomeUsuario,
+                senha: senha,
+                psicologo: psicologo
             })
                 .then(response => resolve(response.data))
                 .catch((err) => reject(err));
