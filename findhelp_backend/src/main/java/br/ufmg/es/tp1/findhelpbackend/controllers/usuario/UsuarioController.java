@@ -1,11 +1,13 @@
 package br.ufmg.es.tp1.findhelpbackend.controllers.usuario;
 
+import br.ufmg.es.tp1.findhelpbackend.models.HistoricoConversa;
 import br.ufmg.es.tp1.findhelpbackend.services.usuario.ILoginService;
 import br.ufmg.es.tp1.findhelpbackend.models.RequisicaoSalvarDadosUsuario;
 import br.ufmg.es.tp1.findhelpbackend.services.usuario.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -31,5 +33,15 @@ public class UsuarioController {
     @GetMapping(value = "/login")
     UUID logarUsuario(@RequestParam("nomeUsuario") String nomeUsuario,@RequestParam("senha") String senha) {
         return loginService.logarUsuario(nomeUsuario, senha);
+    }
+
+    @GetMapping(value = "/ativos")
+    List<HistoricoConversa> buscarPsicologosOnline() {
+        return loginService.buscarPsicologosOnline();
+    }
+
+    @PostMapping
+    boolean deslogarUsuario(@RequestBody UUID IDUsuario) {
+        return loginService.deslogarUsuario(IDUsuario);
     }
 }
