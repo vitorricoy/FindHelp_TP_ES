@@ -40,24 +40,24 @@ Sistema para colocar em contato pacientes e psicólogos de forma online.
 
 ## Backlog da Sprint
 * História: Como usuário, quero me cadastar no sistema.
-    * Tarefa 1: Projetar a interface da página web (Gustavo Couto)
-    * Tarefa 2: Implementar e testar a página web (Gustavo Couto)
+    * Tarefa 1: Projetar a interface da página web (Vitor Rodarte)
+    * Tarefa 2: Implementar e testar a página web (Vitor Rodarte)
     * Tarefa 3: Implementar a camada de acesso aos dados (Vitor Assunção)
     * Tarefa 4: Implementar a camada de lógica de negócio para a a operação de cadastrar pacientes (Vitor Assunção)
     * Tarefa 5: Implementar a camada de controle com a operação de cadastrar pacientes (Vitor Assunção)
 * História: Como usuário, quero logar e deslogar do sistema.
-    * Tarefa 1: Projetar a interface da página web (Gustavo Couto)
-    * Tarefa 2: Implementar e testar a página web (Gustavo Couto)
+    * Tarefa 1: Projetar a interface da página web (Vitor Rodarte)
+    * Tarefa 2: Implementar e testar a página web (Vitor Rodarte)
     * Tarefa 3: Implementar a camada de acesso aos dados (Vitor Assunção)
     * Tarefa 4: Implementar a camada de lógica de negócio para a operação de logar com um usuário (Vitor Assunção)
     * Tarefa 5: Implementar a camada de controle com a operação de logar com um usuário (Vitor Assunção)
 * História: Como paciente, quero buscar psicólogos disponíveis para atendimento no momento.
-    * Tarefa 1: Projetar a interface da página web (Gustavo Couto)
-    * Tarefa 2: Implementar e testar a página web (Gustavo Couto)
-    * Tarefa 3: Implementar o acesso aos dados para a busca de psicólogos logados (Vitor Rodarte)
+    * Tarefa 1: Projetar a interface da página web (Vitor Rodarte)
+    * Tarefa 2: Implementar e testar a página web (Vitor Rodarte)
+    * Tarefa 3: Implementar o acesso aos dados para a busca de psicólogos logados (Vitor Assunção)
     * Tarefa 4: Implementar o acesso aos dados para salvar os usuários logados (Vitor Assunção)
-    * Tarefa 5: Implementar a camada de lógica de negócio para a operação de busca dos psicólogos logados no momento (Vitor Rodarte)
-    * Tarefa 6: Implementar a camada de controle com a operação de busca dos psicólogos logados no momento (Vitor Rodarte)
+    * Tarefa 5: Implementar a camada de lógica de negócio para a operação de busca dos psicólogos logados no momento (Vitor Assunção)
+    * Tarefa 6: Implementar a camada de controle com a operação de busca dos psicólogos logados no momento (Vitor Assunção)
     * Tarefa 7: Implementar a camada de lógica de negócio para guardar se o usuário está logado (Vitor Assunção)
 * História: Como usuário, quero ter acesso a um chat de texto entre psicólogo e paciente
     * Tarefa 1: Projetar a interface da página web (Vitor Rodarte)
